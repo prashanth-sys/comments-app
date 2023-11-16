@@ -29,9 +29,27 @@ class Comments extends Component {
     this.setState({comment: event.target.value})
   }
 
+  isTriggred = id => {
+    this.setState(prevState => ({
+      commentList: prevState.commentList.map(eachContact => {
+        if (id === eachContact.id) {
+          //   eachContact.isFavorite = !eachContact.isFavorite
+          return {...eachContact, isLiked: !eachContact.isLiked}
+        }
+        return eachContact
+      }),
+    }))
+  }
+
+  onDelete = id => {
+    const {commentList, count} = this.state
+    const filteredComment = commentList.filter(each => each.id !== id)
+    this.setState({commentList: filteredComment, count: count - 1})
+  }
+
   onAddComment = event => {
     event.preventDefault()
-    const {name, comment} = this.state
+    const {name, comment, count} = this.state
 
     const initialBackgroundColorClassName = `initial-container ${
       initialContainerBackgroundClassNames[
@@ -55,6 +73,7 @@ class Comments extends Component {
       name: '',
       comment: '',
     }))
+    this.setState({count: count + 1})
   }
 
   render() {
@@ -65,7 +84,7 @@ class Comments extends Component {
           <div className="card-container">
             <h1 className="main-heading">Comments</h1>
             <p className="description">Say something about 4.0 Technologies</p>
-            <from className="input-container">
+            <form className="input-container" onSubmit={this.onAddComment}>
               <input
                 type="search"
                 className="input"
@@ -80,14 +99,10 @@ class Comments extends Component {
                 value={comment}
               />
 
-              <button
-                className="button"
-                type="button"
-                onSubmit={this.onAddComment}
-              >
+              <button className="button" type="submit">
                 Add Comment
               </button>
-            </from>
+            </form>
           </div>
           <img
             src="https://assets.ccbp.in/frontend/react-js/comments-app/comments-img.png"
@@ -99,11 +114,13 @@ class Comments extends Component {
           <div>
             <p>{count} Comments</p>
             <div>
-              <ul>
+              <ul className="list-container">
                 {commentList.map(eachComment => (
                   <CommentItem
                     key={eachComment.id}
                     commentDetails={eachComment}
+                    isTriggred={this.isTriggred}
+                    onDelete={this.onDelete}
                   />
                 ))}
               </ul>
