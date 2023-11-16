@@ -19,7 +19,7 @@ const initialContainerBackgroundClassNames = [
 // Write your code here
 
 class Comments extends Component {
-  state = {commentList: '', name: '', comment: ''}
+  state = {commentList: [], name: '', comment: '', count: 0}
 
   onChange = event => {
     this.setState({name: event.target.value})
@@ -51,21 +51,21 @@ class Comments extends Component {
     }
 
     this.setState(prevState => ({
-      commentsList: [...prevState.commentsList, newComment],
+      commentList: [...prevState.commentList, newComment],
       name: '',
       comment: '',
     }))
   }
 
   render() {
-    const {name, comment, commentList} = this.state
+    const {name, comment, commentList, count} = this.state
     return (
       <div className="bg-container">
         <div className="comment-container">
           <div className="card-container">
             <h1 className="main-heading">Comments</h1>
             <p className="description">Say something about 4.0 Technologies</p>
-            <from onSubmit={this.onAddComment}>
+            <from className="input-container">
               <input
                 type="search"
                 className="input"
@@ -80,7 +80,11 @@ class Comments extends Component {
                 value={comment}
               />
 
-              <button className="button" type="button">
+              <button
+                className="button"
+                type="button"
+                onSubmit={this.onAddComment}
+              >
                 Add Comment
               </button>
             </from>
@@ -93,7 +97,7 @@ class Comments extends Component {
         </div>
         <div className="comment-container">
           <div>
-            <p>0 Comments</p>
+            <p>{count} Comments</p>
             <div>
               <ul>
                 {commentList.map(eachComment => (
